@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+    <% if (typeof searchQuery !== 'undefined') { %>
+        <div class="search-results-header">
+            <h2>Search Results for "<%= searchQuery %>"</h2>
+            <a href="/" class="btn">Back to Trending</a>
+        </div>
+    <% } else { %>
+        <h2>Trending Manga</h2>
+    <% } %>
+    
+    <section class="manga-grid">
+        <% if (mangaList.length > 0) { %>
+            <% mangaList.forEach(manga => { %>
+                <div class="manga-card">
+                    <a href="/manga/<%= manga.id %>">
+                        <img src="<%= manga.coverUrl %>" alt="<%= manga.title %>">
+                        <h3><%= manga.title %></h3>
+                    </a>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p class="no-results">No manga found. Try a different search.</p>
+        <% } %>
+    </section>
+<%- include('partials/footer') %>

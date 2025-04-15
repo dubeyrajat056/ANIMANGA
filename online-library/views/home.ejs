@@ -1,0 +1,294 @@
+<!-- <%- include('partials/header', { user, isLoggedIn }) %>
+
+    <style>
+        /* Page Styling */
+        body {
+            background-color: #f4f5f7;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            color: #2a2a72;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Manga Card Styling */
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+            background: white;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .card-body {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background: linear-gradient(135deg, #2a2a72, #009ffd);
+            border: none;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        /* Alert Box */
+        .alert {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card-img-top {
+                height: 250px;
+            }
+        }
+    </style>
+
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Welcome to Online Library</h1>
+            <% if (error) { %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+                <% } %>
+        </div>
+    </div>
+
+    <div class="row">
+        <% if (mangaList && mangaList.length> 0) { %>
+            <% mangaList.forEach(manga=> { %>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="<%= manga.thumbnail %>" class="card-img-top" alt="<%= manga.title %>">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= manga.title %>
+                            </h5>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="/manga/<%= manga.id %>" class="btn btn-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+                    <% } else { %>
+                        <div class="col-12">
+                            <div class="alert alert-info">No manga available at the moment.</div>
+                        </div>
+                        <% } %>
+    </div>
+
+    <%- include('partials/footer') %> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <%- include('partials/header', { user, isLoggedIn }) %>
+    
+    <style>
+        
+        body {
+            background-color: #121212;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+    
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #009ffd;
+        }
+    
+        
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+    
+        
+        .media-card {
+            position: relative;
+            background: #1c1c1c;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+    
+        .media-card:hover {
+            transform: scale(1.05);
+        }
+    
+        .media-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    
+        
+        .badge-featured {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #00a300;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 5px;
+        }
+    
+        
+        .media-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            display: block;
+        }
+    
+        .media-year {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            margin-bottom: 8px;
+        }
+    
+        
+        @media (max-width: 768px) {
+            .media-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+    
+            .media-card img {
+                height: 180px;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .media-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+    
+            .media-card img {
+                height: 160px;
+            }
+        }
+
+    </style>
+    
+    <!-- <div class="container">
+        
+        <div id="featuredManga">
+            <h2 class="section-title">Featured Manga</h2>
+            <div class="media-grid">
+                <% if (mangaList && mangaList.length > 0) { %>
+                    <% mangaList.forEach(manga => { %>
+                        <div class="media-card">
+                            <span class="badge-featured">FEATURED</span>
+                            <a href="/manga/<%= manga.id %>">
+                                <img src="<%= manga.thumbnail %>" alt="<%= manga.title %>">
+                            </a>
+                            <span class="media-title"><%= manga.title %></span>
+                            <span class="media-year">2023</span>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info">No manga available at the moment.</div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    
+        <div id="searchResultss"></div>
+    </div>
+     -->
+
+
+     <div class="container">
+        <!-- Featured Manga Section -->
+        <div id="featuredManga">
+            <h2 class="section-title">Featured Manga</h2>
+            <div class="media-grid">
+                <% if (mangaList && mangaList.length > 0) { %>
+                    <% mangaList.forEach(manga => { %>
+                        <div class="media-card">
+                            <span class="badge-featured">FEATURED</span>
+                            <a href="/manga/<%= manga.id %>">
+                                <img src="<%= manga.thumbnail %>" alt="<%= manga.title %>">
+                            </a>
+                            <span class="media-title"><%= manga.title %></span>
+                            <span class="media-year">2023</span>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info">No manga available at the moment.</div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    
+        <!-- Search Bar -->
+        
+    
+        <!-- Search Results Section (Initially Empty) -->
+        <div id="searchResults" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
+    
+    
+    
+    
+    
+    <%- include('partials/footer') %>

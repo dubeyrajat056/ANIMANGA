@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+    <div class="error-container">
+        <h2>Error: <%= message %></h2>
+        <% if (error) { %>
+            <div class="error-details">
+                <p><%= error.message %></p>
+                <% if (error.response) { %>
+                    <h3>API Response:</h3>
+                    <pre><%= JSON.stringify(error.response, null, 2) %></pre>
+                <% } %>
+            </div>
+        <% } %>
+        <a href="/" class="btn">Return to Home</a>
+    </div>
+<%- include('partials/footer') %>

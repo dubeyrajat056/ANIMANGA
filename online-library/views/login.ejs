@@ -1,0 +1,103 @@
+<%- include('partials/header', { user: null, isLoggedIn: false }) %>
+
+    <style>
+        /* body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } */
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a777e3, #6e8efb);
+            box-shadow: 0px 5px 15px rgba(110, 142, 251, 0.5);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+    </style>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">Login</h3>
+                </div>
+                <div class="card-body">
+                    <% if (error) { %>
+                        <div class="alert alert-danger">
+                            <%= error %>
+                        </div>
+                        <% } %>
+                            <% if (message) { %>
+                                <div class="alert alert-success">
+                                    <%= message %>
+                                </div>
+                                <% } %>
+
+                                    <form action="/login" method="POST">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Send OTP</button>
+                                    </form>
+
+                                    <div class="mt-3 text-center">
+                                        Don't have an account? <a href="/register">Register here</a>
+                                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% if (showRegisterPopup) { %>
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Account Not Found</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>This email is not registered. Would you like to register now?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                        <a href="/register" class="btn btn-primary" >Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+                registerModal.show();
+            });
+        </script>
+        <% } %>
+
+            <%- include('partials/footer') %>

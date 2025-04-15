@@ -1,0 +1,166 @@
+<!-- <%- include('partials/header') %>
+    <div class="reader-container">
+        <div class="reader-controls">
+            <a href="/manga/<%= mangaId %>" class="btn back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Manga
+            </a>
+            <div class="page-controls">
+                <button id="prev-page" class="btn"><i class="fas fa-chevron-left"></i> Prev</button>
+                <span id="page-indicator">Page 1 of <%= pages.length %></span>
+                <button id="next-page" class="btn">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="reader-options">
+                <select id="quality-select">
+                    <option value="data">High Quality</option>
+                    <option value="dataSaver">Data Saver</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="manga-reader">
+            <% pages.forEach((page, index) => { %>
+                <img 
+                    id="page-<%= index + 1 %>" 
+                    class="manga-page <%= index === 0 ? 'active' : 'hidden' %>" 
+                    data-page="<%= index + 1 %>"
+                    src="<%= `${baseUrl}/data/${chapterHash}/${page}` %>" 
+                    alt="Page <%= index + 1 %>"
+                    loading="lazy"
+                >
+            <% }); %>
+        </div>
+    </div>
+    
+    <script>
+        const chapterData = {
+            pages: <%= pages.length %>,
+            baseUrl: `<%= baseUrl %>`,
+            chapterHash: `<%= chapterHash %>`,
+            dataPages: <%- JSON.stringify(pages) %>,
+            dataSaverPages: <%- JSON.stringify(dataSaver) %>,
+            currentPage: 1
+        };
+    </script>
+<%- include('partials/footer') %>
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <%- include('partials/header') %>
+    <div class="reader-container">
+        <div class="reader-controls">
+            <a href="/manga/<%= mangaId %>" class="btn back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Manga
+            </a>
+            <div class="chapter-info">
+                <h2><%= chapterTitle %></h2>
+            </div>
+            <div class="page-controls">
+                <button id="prev-page" class="btn"><i class="fas fa-chevron-left"></i> Prev</button>
+                <span id="page-indicator">Page 1 of <%= pages.length %></span>
+                <button id="next-page" class="btn">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <div class="manga-reader">
+            <% pages.forEach((page, index) => { %>
+                <div class="page-container" id="page-container-<%= index + 1 %>" data-page="<%= index + 1 %>">
+                    <img 
+                        class="manga-page <%= index === 0 ? 'active' : 'hidden' %>" 
+                        src="<%= `${baseUrl}/data/${chapterHash}/${page}` %>" 
+                        alt="Page <%= index + 1 %>"
+                        loading="lazy"
+                    >
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    
+    <script>
+        const readerConfig = {
+            totalPages: <%= pages.length %>,
+            currentPage: 1,
+            baseUrl: `<%= baseUrl %>`,
+            chapterHash: `<%= chapterHash %>`,
+            pages: <%- JSON.stringify(pages) %>,
+            dataSaverPages: <%- JSON.stringify(dataSaver) %>,
+            quality: 'data' // Default to high quality
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation controls
+            document.getElementById('prev-page').addEventListener('click', prevPage);
+            document.getElementById('next-page').addEventListener('click', nextPage);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') prevPage();
+                if (e.key === 'ArrowRight') nextPage();
+            });
+
+            function updatePage() {
+                // Update indicator
+                document.getElementById('page-indicator').textContent = 
+                    `Page ${readerConfig.currentPage} of ${readerConfig.totalPages}`;
+                
+                // Hide all pages
+                document.querySelectorAll('.manga-page').forEach(page => {
+                    page.classList.add('hidden');
+                    page.classList.remove('active');
+                });
+                
+                // Show current page
+                const currentPage = document.querySelector(`#page-container-${readerConfig.currentPage} .manga-page`);
+                currentPage.classList.remove('hidden');
+                currentPage.classList.add('active');
+                
+                // Scroll to top of page
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function prevPage() {
+                if (readerConfig.currentPage > 1) {
+                    readerConfig.currentPage--;
+                    updatePage();
+                }
+            }
+
+            function nextPage() {
+                if (readerConfig.currentPage < readerConfig.totalPages) {
+                    readerConfig.currentPage++;
+                    updatePage();
+                }
+            }
+
+            // Initial page setup
+            updatePage();
+        });
+    </script>
+<%- include('partials/footer') %>

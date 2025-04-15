@@ -1,0 +1,160 @@
+<%- include('partials/header', { user: null, isLoggedIn: false }) %>
+
+    <style>
+        /* body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } */
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+        }
+
+        .form-control {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .form-control:focus {
+            border-color: #a777e3;
+            box-shadow: 0px 0px 10px rgba(167, 119, 227, 0.5);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a777e3, #6e8efb);
+            box-shadow: 0px 5px 15px rgba(110, 142, 251, 0.5);
+        }
+
+        .text-center a {
+            color: white;
+            font-weight: bold;
+        }
+
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+
+        #timer {
+            font-weight: bold;
+            font-size: 16px;
+            color: #ffcc00;
+        }
+    </style>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">OTP Verification</h3>
+                </div>
+                <div class="card-body">
+                    <% if (error) { %>
+                        <div class="alert alert-danger">
+                            <%= error %>
+                        </div>
+                        <% } %>
+                            <% if (message) { %>
+                                <div class="alert alert-success">
+                                    <%= message %>
+                                </div>
+                                <% } %>
+
+                                    <p>We've sent a 6-digit verification code to <strong>
+                                            <%= email %>
+                                        </strong>.</p>
+                                    <p class="text-muted">Code expires in <span id="timer">02:00</span></p>
+
+                                    <form action="/otp-verify" method="POST">
+                                        <div class="mb-3">
+                                            <label for="otp" class="form-label">Enter Verification Code</label>
+                                            <input type="text" class="form-control" id="otp" name="otp" maxlength="6"
+                                                pattern="\d{6}" title="Please enter 6 digits" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Verify</button>
+                                    </form>
+
+                                    <div class="mt-3 text-center">
+                                        Didn't receive code? <a href="#" id="resendOtpLink">Resend OTP</a>
+                                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer countdown
+        let timeLeft = 120;
+        const timerElement = document.getElementById('timer');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                timerElement.textContent = "Expired";
+                timerElement.classList.add('text-danger');
+            }
+        }, 1000);
+
+        // Resend OTP functionality
+        document.getElementById('resendOtpLink').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            try {
+                const response = await fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('New OTP sent successfully!');
+                    // Reset timer
+                    clearInterval(timer);
+                    timeLeft = 120;
+                    timerElement.textContent = "02:00";
+                    timerElement.classList.remove('text-danger');
+                } else {
+                    alert('Failed to resend OTP: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to resend OTP');
+            }
+        });
+    </script>
+
+    <%- include('partials/footer') %>

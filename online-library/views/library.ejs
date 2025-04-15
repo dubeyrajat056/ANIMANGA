@@ -1,0 +1,200 @@
+<%- include('partials/header', { user, isLoggedIn }) %>
+
+    <style>
+        /* Page Styling */
+        body {
+            background-color: #121212;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+
+        /* Global Styles */
+        body {
+            background-color: #121212;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container */
+        /* .container {
+            max-width: 1300px;
+            margin: auto;
+            padding: 30px 20px;
+        } */
+
+        /* Heading */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        /* Grid Layout */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            /* Adjusted spacing for better alignment */
+        }
+
+        /* Card Wrapper */
+        .col {
+            width: 350px;
+            /* Increased width */
+        }
+
+        /* Card Design */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            height: 400px;
+            /* Increased height for better spacing */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 10px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 15px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Card Image */
+        .card img {
+            width: 100%;
+            height: 270px;
+            /* Adjusted image height */
+            object-fit: cover;
+            border-bottom: 3px solid #444;
+        }
+
+        /* Card Title */
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 10px;
+        }
+
+        /* Last Read Text */
+        .text-muted {
+            font-size: 0.9rem;
+            color: #ccc !important;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            /* Align buttons in one line */
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Buttons */
+        .btn {
+            font-size: 0.95rem;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            /* Make buttons equal width */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            text-align: center;
+        }
+
+        /* Continue Reading Button */
+        .btn-primary {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            margin-right: 8px;
+            /* Space between buttons */
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 15px rgba(0, 114, 255, 0.5);
+        }
+
+        /* Remove Button */
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4c4c, #ff0000);
+            color: white;
+            margin-left: 8px;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff0000, #ff4c4c);
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 15px rgba(255, 0, 0, 0.5);
+        }
+    </style>
+
+    <div class="container main-content">
+        <h1 class="my-4">Your Library</h1>
+
+        <% if (error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <% } %>
+
+                <% if (items && items.length> 0) { %>
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <% items.forEach(item=> { %>
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="<%= item.thumbnail_url %>" class="card-img-top" alt="<%= item.title %>">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <%= item.title %>
+                                        </h5>
+                                        <% if (item.last_read) { %>
+                                            <p class="text-muted">
+                                                Last read: <%= new Date(item.last_read).toLocaleDateString() %>
+                                            </p>
+                                            <% } %>
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+                                        <a href="<%= item.pdf_url %>" class="btn btn-primary">Continue Reading</a>
+                                        <form action="/remove-from-library" method="POST" class="d-inline">
+                                            <input type="hidden" name="manga_id" value="<%= item.manga_id %>">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <% } else { %>
+                        <div class="alert alert-info">Your library is empty. Start reading to add items here.</div>
+                        <% } %>
+    </div>
+
+    <%- include('partials/footer') %>

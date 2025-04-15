@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Navbar Styling */
+        .navbar {
+            background: linear-gradient(135deg, #2a2a72, #009ffd);
+            padding: 15px 0;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: white !important;
+            transition: 0.3s;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        /* Highlight active tab */
+        .navbar-nav .nav-link.active,
+        .navbar-nav .nav-link:hover {
+            background-color: #ffcc00 !important;
+            color: #000 !important;
+            transform: scale(1.05);
+        }
+
+        .dropdown-menu {
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-item {
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #009ffd;
+            color: white;
+        }
+
+        /* Logout Button Styling */
+        .dropdown-item button {
+            border: none;
+            background: none;
+            color: #333;
+            font-weight: 500;
+            width: 100%;
+            text-align: left;
+            padding: 8px 20px;
+            transition: 0.3s;
+        }
+
+        .dropdown-item button:hover {
+            background-color: #ffcc00;
+            color: #000;
+            border-radius: 5px;
+        }
+
+        /* Responsive Navbar */
+        @media (max-width: 992px) {
+            .navbar-nav {
+                text-align: center;
+            }
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 40px 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #333;
+        }
+
+        .icons {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .icon-item {
+            text-align: center;
+            font-size: 14px;
+            flex: 1 1 auto;
+            min-width: 60px;
+        }
+
+        .icon-item i {
+            font-size: 1.4rem;
+            display: block;
+        }
+
+        .icon-item:nth-child(5) {
+            margin-left: 20px;
+        }
+
+        /* new  */
+
+    </style>
+        <link rel="stylesheet" href="/public/css/newsty.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="Online Library Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="search-box mx-auto">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search Manga...">
+                <i class="bi bi-search"></i>
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <% if (isLoggedIn) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/read-later">Read Later</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/library">Library</a>
+                        </li>
+                        <% } %>
+                </ul>
+                <ul class="navbar-nav">
+                    <% if (isLoggedIn) { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown">
+                                <%= user.name %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/settings">Settings</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+
+                                    <form action="/logout" method="POST" class="dropdown-item">
+                                        <button type="submit"
+                                            class="btn btn-link p-0 text-decoration-none">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item d-lg-none">
+                            <form action="/logout" method="POST" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link">Logout</button>
+                            </form>
+                        </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Register</a>
+                            </li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.getElementById("searchInput");
+                const searchButton = document.getElementById("searchButton");
+                const featuredManga = document.getElementById("featuredManga");
+                const searchResultsContainer = document.getElementById("searchResults");
+
+                // Event listeners for Enter key and button click
+                searchInput.addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        fetchSearchResults();
+                    }
+                });
+
+                searchButton.addEventListener("click", function () {
+                    fetchSearchResults();
+                });
+
+                async function fetchSearchResults() {
+                    const query = searchInput.value.trim();
+                    if (!query) return;
+
+                    try {
+                        // Fetch search results from API
+                        const response = await fetch(`/api/search?query=${query}`);
+                        const results = await response.json();
+
+                        // Hide Featured Manga Section
+                        featuredManga.style.display = "none";
+
+                        // Clear previous search results
+                        searchResultsContainer.innerHTML = "";
+
+                        // Display search results
+                        if (results.length === 0) {
+                            searchResultsContainer.innerHTML = `<h2 class="text-center">No results found</h2>`;
+                            return;
+                        }
+
+                        results.forEach(manga => {
+                            const mangaCard = `
+                    <div class="manga-card">
+                        <div class="card">
+                            <img src="${manga.thumbnail}" class="card-img-top" alt="${manga.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${manga.title}</h5>
+                                <a href="/manga/${manga.id}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                            searchResultsContainer.innerHTML += mangaCard;
+                        });
+
+                    } catch (error) {
+                        console.error("Error fetching search results:", error);
+                        alert("Failed to fetch manga. Please try again.");
+                    }
+                }
+            });
+
+        </script>
