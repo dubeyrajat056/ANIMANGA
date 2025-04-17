@@ -13,7 +13,8 @@
             <% mangaList.forEach(manga => { %>
                 <div class="manga-card">
                     <a href="/manga/<%= manga.id %>">
-                        <img src="<%= manga.coverUrl %>" alt="<%= manga.title %>">
+                        //<img src="<%= manga.coverUrl %>" alt="<%= manga.title %>">
+                        <img src={`/proxy-image?url=${encodeURIComponent(originalUrl)}`} />
                         <h3><%= manga.title %></h3>
                     </a>
                 </div>
