@@ -81,6 +81,23 @@ app.get('/manga/:id', async (req, res) => {
     }
 });
 
+//cheak for thumbanail
+// Express backend route
+app.get('/proxy-image', async (req, res) => {
+  const { url } = req.query;
+  try {
+    const response = await fetch(url);
+    const contentType = response.headers.get('content-type');
+    res.setHeader('Content-Type', contentType);
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    res.status(500).send('Image fetch failed');
+  }
+});
+
+//cheak end
+
 
 
 // Chapter reader route - Updated for full images
